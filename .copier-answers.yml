@@ -1,0 +1,7 @@
+_src_path: ../protopyp_template/template
+license: mit
+long_name: Makefile Help
+short_description: Support for docstrings in makefiles
+short_name: mkhelp
+
+
