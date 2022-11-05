@@ -16,6 +16,12 @@ profile = "black"
 [tool.mypy]
 disallow_untyped_defs = true
 
+[[tool.mypy.overrides]]
+module = [
+    "fire",
+]
+ignore_missing_imports = true
+
 
 [tool.pylint.MASTER]
 ignore = ["_version.py"]
@@ -28,10 +34,9 @@ max-line-length = 88
 
 [tool.pylint.messages_control]
 disable = [
-    "bad-continuation",  # for black compatibility
     "missing-docstring",
 ]
-good-names = []
+good-names = ["e", "f", "m"]
 bad-names=[]
 
 

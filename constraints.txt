@@ -4,18 +4,22 @@
 #
 #    pip-compile --allow-unsafe --output-file=constraints.txt --strip-extras requirements/build.txt requirements/dev.txt requirements/run.txt
 #
+alabaster==0.7.12
+    # via sphinx
 astroid==2.11.5
     # via pylint
 attrs==21.4.0
     # via pytest
+babel==2.11.0
+    # via sphinx
 black==22.3.0
     # via -r requirements/dev.txt
 bleach==5.0.0
     # via readme-renderer
 build==0.8.0
-    # via -r requirements/dev.txt
-canaria-domestica-red==1.0.1
-    # via -r requirements/dev.txt
+    # via
+    #   -r requirements/dev.txt
+    #   pilecap
 certifi==2022.5.18.1
     # via requests
 cffi==1.15.0
@@ -36,16 +40,23 @@ dill==0.3.5.1
     # via pylint
 distlib==0.3.4
     # via virtualenv
-docutils==0.18.1
-    # via readme-renderer
+docutils==0.19
+    # via
+    #   m2r2
+    #   readme-renderer
+    #   sphinx
 filelock==3.7.0
     # via
     #   tox
     #   virtualenv
+fire==0.4.0
+    # via -r requirements/run.txt
 flake8==4.0.1
     # via -r requirements/dev.txt
 idna==3.3
     # via requests
+imagesize==1.4.1
+    # via sphinx
 importlib-metadata==4.11.4
     # via
     #   keyring
@@ -60,6 +71,8 @@ jeepney==0.8.0
     # via
     #   keyring
     #   secretstorage
+jinja2==3.1.2
+    # via sphinx
 keyring==23.5.1
     # via twine
 lazy-object-proxy==1.7.1
@@ -68,12 +81,16 @@ lxml==4.8.0
     # via
     #   -r requirements/dev.txt
     #   mypy
+m2r2==0.3.3
+    # via -r requirements/dev.txt
+markupsafe==2.1.1
+    # via jinja2
 mccabe==0.6.1
     # via
     #   flake8
     #   pylint
-more-itertools==8.13.0
-    # via -r requirements/run.txt
+mistune==0.8.4
+    # via m2r2
 mypy==0.950
     # via -r requirements/dev.txt
 mypy-extensions==0.4.3
@@ -85,15 +102,19 @@ packaging==21.3
     #   build
     #   pytest
     #   setuptools-scm
+    #   sphinx
     #   tox
 pathspec==0.9.0
     # via black
 pep517==0.10.0
     # via
     #   build
+    #   pilecap
     #   pip-tools
-pip-tools==6.6.2
+pilecap==0.2.0
     # via -r requirements/dev.txt
+pip-tools==6.6.2
+    # via pilecap
 pkginfo==1.8.2
     # via twine
 platformdirs==2.5.2
@@ -119,17 +140,21 @@ pygments==2.12.0
     # via
     #   readme-renderer
     #   rich
+    #   sphinx
 pylint==2.13.9
     # via -r requirements/dev.txt
 pyparsing==2.4.7
     # via packaging
 pytest==7.1.2
     # via -r requirements/dev.txt
+pytz==2022.6
+    # via babel
 readme-renderer==35.0
     # via twine
 requests==2.27.1
     # via
     #   requests-toolbelt
+    #   sphinx
     #   twine
 requests-toolbelt==0.9.1
     # via twine
@@ -140,19 +165,35 @@ rich==12.4.4
 secretstorage==3.3.2
     # via keyring
 setuptools-scm==6.4.2
-    # via
-    #   -r requirements/build.txt
-    #   -r requirements/dev.txt
+    # via -r requirements/build.txt
 six==1.16.0
     # via
     #   bleach
+    #   fire
     #   tox
     #   virtualenv
+snowballstemmer==2.2.0
+    # via sphinx
+sphinx==5.3.0
+    # via -r requirements/dev.txt
+sphinxcontrib-applehelp==1.0.2
+    # via sphinx
+sphinxcontrib-devhelp==1.0.2
+    # via sphinx
+sphinxcontrib-htmlhelp==2.0.0
+    # via sphinx
+sphinxcontrib-jsmath==1.0.1
+    # via sphinx
+sphinxcontrib-qthelp==1.0.3
+    # via sphinx
+sphinxcontrib-serializinghtml==1.1.5
+    # via sphinx
+termcolor==2.1.0
+    # via fire
 toml==0.10.2
     # via
     #   pep517
     #   tox
-    #   tox-constraints
 tomli==2.0.1
     # via
     #   black
@@ -162,10 +203,6 @@ tomli==2.0.1
     #   pytest
     #   setuptools-scm
 tox==3.25.0
-    # via
-    #   -r requirements/dev.txt
-    #   tox-constraints
-tox-constraints==0.14.1
     # via -r requirements/dev.txt
 twine==4.0.0
     # via -r requirements/dev.txt
@@ -176,15 +213,11 @@ urllib3==1.26.9
     #   requests
     #   twine
 virtualenv==20.14.1
-    # via
-    #   tox
-    #   tox-constraints
+    # via tox
 webencodings==0.5.1
     # via bleach
 wheel==0.36.2
-    # via
-    #   -r requirements/dev.txt
-    #   pip-tools
+    # via pip-tools
 wrapt==1.14.1
     # via astroid
 zipp==3.8.0
@@ -198,7 +231,6 @@ pip==22.1
 setuptools==62.3.2
     # via
     #   -r requirements/build.txt
-    #   -r requirements/dev.txt
     #   astroid
     #   pip-tools
     #   setuptools-scm

@@ -5,7 +5,10 @@
 /build/
 /check_*
 /dist/
+/docs/makefile.rst
 /reports/
+/requirements/build.txt
+/requirements/run.txt
 /src/mkhelp/_version.py
 /src/*.egg-info/
 /venv/
