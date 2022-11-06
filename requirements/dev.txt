@@ -1,16 +1,15 @@
 # Development dependencies
+-r docs.txt
 black
 build
 coverage
 flake8
 isort
 lxml
-m2r2
 mypy[reports]
 pilecap
 pip
 pylint
 pytest >=6.2.5
-sphinx
 tox
 twine

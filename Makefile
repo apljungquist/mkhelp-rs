@@ -124,7 +124,7 @@ build/docs/index.html: docs/makefile.rst
 	$(CLEAN_DIR_TARGET)
 	sphinx-build -b html docs $(@D)
 
-constraints.txt: requirements/build.txt requirements/dev.txt requirements/run.txt
+constraints.txt: requirements/build.txt requirements/run.txt $(wildcard requirements/*.txt)
 	pip-compile --allow-unsafe --output-file $@ --quiet --strip-extras $^
 
 dist/_envoy:

@@ -2,6 +2,11 @@
 
 _Support for docstrings in makefiles_
 
+---
+
+[![Documentation Status](https://readthedocs.org/projects/mkhelp/badge/?version=latest)](https://mkhelp.readthedocs.io/en/latest/?badge=latest)
+
+
 Sometimes it is convenient to use a makefile as interface to development workflows.
 The recipes are flexible, can depend on other targets and `make` provides tab completion.
 
