@@ -23,9 +23,14 @@ logger = logging.getLogger(__name__)
 
 _T = TypeVar("_T")
 
-_TargetsT = Dict[Optional[str], str]
+_TargetsT = Dict[str, str]
 _SubsectionsT = Dict[Optional[str], _TargetsT]
 _SectionsT = Dict[Optional[str], _SubsectionsT]
+
+
+class Overline(str):
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}('{self}')"
 
 
 class Section(str):
@@ -71,7 +76,7 @@ class Stream(Generic[_T]):
 @dataclasses.dataclass(frozen=True)
 class Docstring:
     lines: List[str]
-    ref: Union[Section, Subsection, Target]
+    ref: Union[Overline, Section, Subsection, Target]
     _target_pat: ClassVar[re.Pattern] = re.compile(
         r"^(?P<name>[a-zA-Z0-9_.-]+(/[a-zA-Z0-9_.-]+)*):.*$"
     )
@@ -79,6 +84,15 @@ class Docstring:
     @staticmethod
     def _summary_from_target(name: str) -> str:
         return name.capitalize().replace("_", " ")
+
+    @staticmethod
+    def _is_overline(lines: Sequence[str]) -> bool:
+        """Return True iff lines represent an overline
+
+        >>> Docstring._is_overline(['Makefile', '********'])
+        True
+        """
+        return 1 < len(lines) and set(lines[1]) == {"*"}
 
     @staticmethod
     def _is_section(lines: Sequence[str]) -> bool:
@@ -104,8 +118,10 @@ class Docstring:
         while stream[0].startswith("##"):
             lines.append(stream.pop()[2:].strip())
 
-        if cls._is_section(lines):
-            ref: Union[Section, Subsection, Target] = Section(lines[0])
+        if cls._is_overline(lines):
+            ref: Union[Overline, Section, Subsection, Target] = Overline(lines[0])
+        elif cls._is_section(lines):
+            ref = Section(lines[0])
         elif cls._is_subsection(lines):
             ref = Subsection(lines[0])
         elif m := cls._target_pat.match(stream[0]):
@@ -153,7 +169,12 @@ class HelpFormatter(Formatter):
 
         for docstring in docstrings:
             ref = docstring.ref
-            if isinstance(ref, Section):
+            if isinstance(ref, Overline):
+                logger.debug("Sections %r", sections)
+                assert sections == {
+                    None: {None: {}}
+                }, "Expected an overline only at the start of the document"
+            elif isinstance(ref, Section):
                 assert ref not in sections
                 targets = {}
                 subsections = {None: targets}
@@ -170,12 +191,6 @@ class HelpFormatter(Formatter):
 
     @classmethod
     def lines(cls, docstrings: Iterable[Docstring]) -> Iterator[str]:
-        docstrings = list(docstrings)
-        target_max_len = max(
-            len(docstring.ref)
-            for docstring in docstrings
-            if isinstance(docstring.ref, Target)
-        )
         sections = cls._hierarchy(docstrings)
 
         is_first = True
@@ -183,13 +198,17 @@ class HelpFormatter(Formatter):
             for subsection, targets in subsections.items():
                 if not targets:
                     continue
+
+                target_max_len = max(len(ref) for ref in targets)
+
                 if is_first:
                     is_first = False
                 else:
                     yield ""
+
                 if subsection is None:
                     if section is not None:
-                        yield section
+                        yield f"{section}:"
                 else:
                     yield f"{subsection}:"
                 for target, summary in targets.items():

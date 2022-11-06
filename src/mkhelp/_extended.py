@@ -15,20 +15,14 @@ class RestructuredTextFormatter(_base.Formatter):
     @classmethod
     def lines(cls, docstrings: Iterable[_base.Docstring]) -> Iterator[str]:
         # TODO: Add anchor to enable references
-        yield "********"
-        yield "Makefile"
-        yield "********"
-        yield ""
-        yield "This document describes a selection of helpful make targets."
-        yield ""
         for docstring in docstrings:
             ref = docstring.ref
-            if isinstance(ref, _base.Section):
-                yield from docstring.lines
-            elif isinstance(ref, _base.Subsection):
+            if isinstance(ref, (_base.Overline, _base.Section, _base.Subsection)):
                 yield from docstring.lines
             elif isinstance(ref, _base.Target):
-                yield ref
+                yield f".. _makefile.{ref}:"
+                yield ""
+                yield f":code:`{ref}`"
                 for line in docstring.lines:
                     yield "  " + line
             else:
@@ -41,12 +35,16 @@ class MarkdownFormatter(_base.Formatter):
     def lines(cls, docstrings: Iterable[_base.Docstring]) -> Iterator[str]:
         for docstring in docstrings:
             ref = docstring.ref
-            if isinstance(ref, _base.Section):
+            if isinstance(ref, _base.Overline):
                 yield f"# {docstring.lines[0]}"
                 for line in docstring.lines[2:]:
                     yield line
-            elif isinstance(ref, _base.Subsection):
+            elif isinstance(ref, _base.Section):
                 yield f"## {docstring.lines[0]}"
+                for line in docstring.lines[2:]:
+                    yield line
+            elif isinstance(ref, _base.Subsection):
+                yield f"### {docstring.lines[0]}"
                 for line in docstring.lines[2:]:
                     yield line
             elif isinstance(ref, _base.Target):

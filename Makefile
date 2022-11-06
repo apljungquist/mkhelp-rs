@@ -1,3 +1,11 @@
+## Makefile
+## ********
+##
+## This makefile contains targets for
+##
+## * accomplishing tasks (:ref:`Verbs`) and
+## * creating artifacts (:ref:`Nouns`).
+
 # Config
 # ======
 # This section contains various special targets and variables that affect the behavior
@@ -29,6 +37,7 @@ CLEAN_DIR_TARGET = git clean -xdf $(@D); mkdir -p $(@D)
 ## * May have side effect
 ## * Should not have side effects should not affect nouns
 
+## Print help message
 help:
 	@python bin/print_makefile_help.py < $(MAKEFILE_LIST)
 
@@ -104,6 +113,7 @@ fix_format:
 ## * Must not have any prerequisites that are verbs
 ## * Ordered first by specificity, second by name
 
+## Update the script that generates the help message for this makefile
 bin/print_makefile_help.py:
 	mkhelp print_script > $@
 

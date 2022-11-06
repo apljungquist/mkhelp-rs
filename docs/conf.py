@@ -16,6 +16,7 @@ release = '0.1'
 
 extensions = [
     "m2r2",
+    "sphinx.ext.autosectionlabel",
 ]
 
 templates_path = ['_templates']
