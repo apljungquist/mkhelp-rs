@@ -8,9 +8,11 @@ import re
 import sys
 from typing import (
     ClassVar,
+    Dict,
     Generic,
     Iterable,
     Iterator,
+    List,
     Optional,
     Sequence,
     TypeVar,
@@ -21,9 +23,9 @@ logger = logging.getLogger(__name__)
 
 _T = TypeVar("_T")
 
-_TargetsT = dict[Optional[str], str]
-_SubsectionsT = dict[Optional[str], _TargetsT]
-_SectionsT = dict[Optional[str], _SubsectionsT]
+_TargetsT = Dict[Optional[str], str]
+_SubsectionsT = Dict[Optional[str], _TargetsT]
+_SectionsT = Dict[Optional[str], _SubsectionsT]
 
 
 class Section(str):
@@ -41,17 +43,17 @@ class Target(str):
         return f"{self.__class__.__name__}('{self}')"
 
 
-class kStream(Generic[_T]):
-    def __init__(self, it: Iterable[_T]) -> None:
-        self._it = iter(it)
+class Stream(Generic[_T]):
+    def __init__(self, iterator: Iterable[_T]) -> None:
+        self._iterator = iter(iterator)
         self._buffer: collections.deque[_T] = collections.deque()
 
     def __getitem__(self, item: int) -> _T:
         while len(self._buffer) <= item:
             try:
-                self._buffer.append(next(self._it))
-            except StopIteration:
-                raise IndexError
+                self._buffer.append(next(self._iterator))
+            except StopIteration as e:
+                raise IndexError from e
 
         return self._buffer[item]
 
@@ -60,7 +62,7 @@ class kStream(Generic[_T]):
             result = self._buffer.popleft()
         else:
             try:
-                result = next(self._it)
+                result = next(self._iterator)
             except StopIteration as e:
                 raise IndexError from e
         return result
@@ -68,7 +70,7 @@ class kStream(Generic[_T]):
 
 @dataclasses.dataclass(frozen=True)
 class Docstring:
-    lines: list[str]
+    lines: List[str]
     ref: Union[Section, Subsection, Target]
     _target_pat: ClassVar[re.Pattern] = re.compile(
         r"^(?P<name>[a-zA-Z0-9_.-]+(/[a-zA-Z0-9_.-]+)*):.*$"
@@ -94,7 +96,7 @@ class Docstring:
         return 1 < len(lines) and set(lines[1]) == {"-"}
 
     @classmethod
-    def take_one(cls, stream: kStream[str]) -> Docstring:
+    def take_one(cls, stream: Stream[str]) -> Docstring:
         while not stream[0].startswith("##"):
             stream.pop()
 
@@ -119,7 +121,7 @@ class Docstring:
         return Docstring(lines, ref)
 
     @classmethod
-    def take_all(cls, stream: kStream[str]) -> list[Docstring]:
+    def take_all(cls, stream: Stream[str]) -> List[Docstring]:
         result = []
         while True:
             try:
@@ -132,7 +134,10 @@ class Docstring:
 class Formatter:
     @classmethod
     def lines(cls, docstrings: Iterable[Docstring]) -> Iterator[str]:
-        yield "Not Implemented"
+        # pylint: disable=unused-argument
+        # ... because subclasses do use it
+        yield ""
+        raise NotImplementedError
 
     @classmethod
     def print(cls, docstrings: Iterable[Docstring]) -> None:
@@ -192,7 +197,7 @@ class HelpFormatter(Formatter):
 
 
 def main() -> None:
-    docstrings = Docstring.take_all(kStream(sys.stdin.readlines()))
+    docstrings = Docstring.take_all(Stream(sys.stdin.readlines()))
     HelpFormatter.print(docstrings)
 
 

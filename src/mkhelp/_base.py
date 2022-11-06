@@ -8,9 +8,11 @@ import re
 import sys
 from typing import (
     ClassVar,
+    Dict,
     Generic,
     Iterable,
     Iterator,
+    List,
     Optional,
     Sequence,
     TypeVar,
@@ -21,9 +23,9 @@ logger = logging.getLogger(__name__)
 
 _T = TypeVar("_T")
 
-_TargetsT = dict[Optional[str], str]
-_SubsectionsT = dict[Optional[str], _TargetsT]
-_SectionsT = dict[Optional[str], _SubsectionsT]
+_TargetsT = Dict[Optional[str], str]
+_SubsectionsT = Dict[Optional[str], _TargetsT]
+_SectionsT = Dict[Optional[str], _SubsectionsT]
 
 
 class Section(str):
@@ -68,7 +70,7 @@ class Stream(Generic[_T]):
 
 @dataclasses.dataclass(frozen=True)
 class Docstring:
-    lines: list[str]
+    lines: List[str]
     ref: Union[Section, Subsection, Target]
     _target_pat: ClassVar[re.Pattern] = re.compile(
         r"^(?P<name>[a-zA-Z0-9_.-]+(/[a-zA-Z0-9_.-]+)*):.*$"
@@ -119,7 +121,7 @@ class Docstring:
         return Docstring(lines, ref)
 
     @classmethod
-    def take_all(cls, stream: Stream[str]) -> list[Docstring]:
+    def take_all(cls, stream: Stream[str]) -> List[Docstring]:
         result = []
         while True:
             try:

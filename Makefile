@@ -36,7 +36,7 @@ help:
 ## ------
 
 ## Run all checks that have not yet passed
-check_all: check_format check_types check_lint check_dist check_docs check_diff check_tests
+check_all: check_format check_types check_lint check_dist check_docs check_diff check_tests check_tox
 	rm $^
 
 ## _
@@ -70,6 +70,12 @@ check_diff: bin/print_makefile_help.py constraints.txt
 ## Check that unit tests pass
 check_tests:
 	pytest --durations=10 --doctest-modules src/mkhelp tests/
+	touch $@
+
+## Check that unit tests pass in multiple environments
+check_tox:
+	tox -e py38
+	tox -e py311
 	touch $@
 
 # This target will use cache created by coverage report but not the other way around.
