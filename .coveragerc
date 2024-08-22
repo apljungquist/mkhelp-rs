@@ -1,9 +1,0 @@
-[run]
-branch = True
-source = mkhelp,tests
-
-[paths]
-source =
-    src/mkhelp
-    .tox/*/lib/python*/site-packages/mkhelp
-

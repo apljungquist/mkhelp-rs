@@ -11,7 +11,6 @@ if [ ! -d "venv" ]; then
   echo "Creating venv"
   python -m venv --prompt "mkhelp" venv
   . "venv/bin/activate"
-  pip install pip setuptools
 else
   echo "Reusing venv"
   . "venv/bin/activate"

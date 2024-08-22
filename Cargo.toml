@@ -1,0 +1,10 @@
+[package]
+name = "mkhelp"
+version = "0.2.3"
+edition = "2021"
+description = "Support for docstrings in makefiles"
+license = "MIT"
+
+[dependencies]
+clap = { version = "4.5.0", features = ["derive"] }
+
