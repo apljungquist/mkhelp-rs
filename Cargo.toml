@@ -3,6 +3,7 @@ name = "mkhelp"
 version = "0.2.3"
 edition = "2021"
 description = "Support for docstrings in makefiles"
+repository = "https://github.com/apljungquist/mkhelp-rs"
 license = "MIT"
 
 [dependencies]
