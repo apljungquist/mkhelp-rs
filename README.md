@@ -4,10 +4,10 @@ _Support for docstrings in makefiles_
 
 ---
 
-Sometimes it is convenient to use a makefile as interface to development workflows.
+Sometimes it is convenient to use a makefile as an interface to development workflows.
 The recipes are flexible, can depend on other targets and `make` provides tab completion.
 
-Once set up it could look something like
+Once set up, it could look something like
 
 ```console
 $ make
